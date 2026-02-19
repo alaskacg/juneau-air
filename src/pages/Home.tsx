@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Plane, MapPin, Calendar, Users, Shield, CheckCircle } from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const popularRoutes = [
   { from: 'Juneau', to: 'Glacier Bay', duration: '45 min', price: '$350', desc: 'Fly over stunning glaciers and pristine wilderness' },
@@ -45,6 +48,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
+      <Header />
       {/* Hero */}
       <section className="relative py-24 md:py-36 bg-gradient-to-br from-slate-950 via-sky-950 to-slate-900">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-900/20 via-transparent to-transparent" />
@@ -261,10 +265,10 @@ export default function Home() {
               <div><span className="text-3xl block mb-2">🛡️</span><span className="font-semibold">Stripe Payments</span><p className="text-xs text-slate-300 mt-1">Automatic secure payouts</p></div>
             </div>
           </div>
-          <a href="mailto:pilots@juneau.air" className="inline-block bg-white text-slate-900 px-8 py-4 rounded-xl font-semibold hover:bg-slate-100 transition text-lg">
+          <Link to="/pilot/register" className="inline-block bg-white text-slate-900 px-8 py-4 rounded-xl font-semibold hover:bg-slate-100 transition text-lg">
             Register as a Pilot
-          </a>
-          <p className="text-sm text-slate-300 mt-3">Contact: pilots@juneau.air · (907) 555-FLY1</p>
+          </Link>
+          <p className="text-sm text-slate-300 mt-3">Contact: fly@juneauair.com · (510) 345-5439</p>
         </div>
       </section>
 
@@ -273,31 +277,21 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-8">Complete Your Alaska Adventure</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            <a href="https://alaskadronesurvey.com" className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-sky-600/50 transition text-center">
+            <a href="https://alaskadronesurvey.com" target="_blank" rel="noopener noreferrer" className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-sky-600/50 transition text-center">
               <span className="text-3xl block mb-2">📸</span>
               <h3 className="font-bold text-sky-400">Alaska Drone Survey</h3>
               <p className="text-sm text-slate-400 mt-1">Aerial photography & mapping services</p>
             </a>
-            <a href="https://alaskaguidelistings.com" className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-emerald-600/50 transition text-center">
+            <a href="https://akguidesearch.com" target="_blank" rel="noopener noreferrer" className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-emerald-600/50 transition text-center">
               <span className="text-3xl block mb-2">🧭</span>
-              <h3 className="font-bold text-emerald-400">Alaska Guide Listings</h3>
+              <h3 className="font-bold text-emerald-400">AK Guide Search</h3>
               <p className="text-sm text-slate-400 mt-1">Find expert guides at your destination</p>
             </a>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <section className="py-8 bg-slate-900 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Plane className="w-5 h-5 text-sky-400" />
-            <span className="font-bold">Juneau Air</span>
-            <span className="text-sm text-slate-400 ml-2">Bush Charter Marketplace</span>
-          </div>
-          <p className="text-sm text-slate-500">© 2024 Juneau Air. FAA Part 135 Certified. All rights reserved.</p>
-        </div>
-      </section>
+      <Footer />
     </div>
   );
 }
