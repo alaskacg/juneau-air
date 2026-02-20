@@ -12,6 +12,8 @@ interface Location {
   icao_code: string;
 }
 
+type RouteWeatherResult = Awaited<ReturnType<typeof checkRouteWeather>>;
+
 export default function BookingForm() {
   const [fromLocation, setFromLocation] = useState('');
   const [toLocation, setToLocation] = useState('');
@@ -19,7 +21,8 @@ export default function BookingForm() {
   const [flightTime, setFlightTime] = useState('');
   const [passengers, setPassengers] = useState(1);
   const [weatherSafe, setWeatherSafe] = useState<boolean | null>(null);
-  const [weatherDetails, setWeatherDetails] = useState<any>(null);
+  const [weatherDetails, setWeatherDetails] = useState<RouteWeatherResult | null>(null);
+  const [weatherError, setWeatherError] = useState<string | null>(null);
 
   const { data: locations } = useQuery({
     queryKey: ['locations'],
@@ -35,17 +38,20 @@ export default function BookingForm() {
     },
   });
 
-  const checkWeather = async () => {
-    if (!fromLocation || !toLocation) return;
+  const checkWeather = async (): Promise<RouteWeatherResult | null> => {
+    setWeatherError(null);
+
+    if (!fromLocation || !toLocation) return null;
 
     const from = locations?.find(l => l.id === fromLocation);
     const to = locations?.find(l => l.id === toLocation);
 
-    if (!from?.icao_code || !to?.icao_code) return;
+    if (!from?.icao_code || !to?.icao_code) return null;
 
     const weather = await checkRouteWeather(from.icao_code, to.icao_code);
     setWeatherSafe(weather.safe);
     setWeatherDetails(weather);
+    return weather;
   };
 
   const createBooking = useMutation({
@@ -126,10 +132,16 @@ export default function BookingForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await checkWeather();
-    
-    if (weatherSafe === false) {
-      alert('Flight blocked due to unsafe weather conditions');
+    try {
+      const weather = await checkWeather();
+
+      if (weather && !weather.safe) {
+        alert('Flight blocked due to unsafe weather conditions');
+        return;
+      }
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unable to verify weather conditions right now.';
+      setWeatherError(message);
       return;
     }
 
@@ -138,9 +150,11 @@ export default function BookingForm() {
 
   const basePrice = 350;
   const totalPrice = basePrice * passengers;
+  const bookingErrorMessage =
+    createBooking.error instanceof Error ? createBooking.error.message : 'Unable to complete booking.';
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-alaska-blue to-alaska-glacier bg-[url('/alaska-aerial.jpg')] bg-cover bg-center">
+    <div className="min-h-screen bg-gradient-to-b from-alaska-blue to-alaska-glacier">
       <div className="min-h-screen bg-black/40 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-2xl mx-auto">
@@ -265,6 +279,12 @@ export default function BookingForm() {
                 </div>
               )}
 
+              {weatherError && (
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-sm text-red-700">
+                  {weatherError}
+                </div>
+              )}
+
               <div className="bg-alaska-glacier border-2 border-alaska-blue rounded-xl p-6">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-700">Base rate</span>
@@ -293,6 +313,12 @@ export default function BookingForm() {
                   <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-2" />
                   <p className="text-green-700 font-semibold">Pilot confirmed. Flight booked!</p>
                   <p className="text-sm text-green-600 mt-1">Check your email for waiver and details.</p>
+                </div>
+              )}
+
+              {createBooking.isError && (
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-sm text-red-700">
+                  {bookingErrorMessage}
                 </div>
               )}
             </form>

@@ -5,8 +5,20 @@ import { releasePaymentToPilot } from '../../services/stripeConnect';
 import { Plane, Camera, MapPin, CheckCircle } from 'lucide-react';
 
 interface BirdDogProps {
-  booking: any;
-  pilot: any;
+  booking: {
+    id: string;
+    status: string;
+    flight_date: string;
+    flight_time: string;
+    passengers: number;
+    landing_photo_url?: string | null;
+    from_location?: { name: string } | null;
+    to_location?: { name: string } | null;
+  };
+  pilot: {
+    id: string;
+    stripe_connect_account_id?: string | null;
+  };
 }
 
 export default function BirdDog({ booking, pilot }: BirdDogProps) {

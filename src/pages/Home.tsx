@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Plane, MapPin, Calendar, Users, Shield, CheckCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -45,6 +45,7 @@ export default function Home() {
   const [toLoc, setToLoc] = useState('');
   const [date, setDate] = useState('');
   const [passengers, setPassengers] = useState(1);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -76,7 +77,13 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
             <h2 className="text-2xl font-bold mb-6 text-center">Search Available Flights</h2>
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                navigate('/book');
+              }}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-slate-400 mb-2">
@@ -114,7 +121,7 @@ export default function Home() {
                 </div>
               </div>
               <button type="submit" className="w-full bg-sky-600 hover:bg-sky-500 py-4 rounded-xl font-semibold transition text-lg flex items-center justify-center gap-2">
-                <Plane className="w-5 h-5" /> Search Available Flights
+                <Plane className="w-5 h-5" /> Continue to Booking
               </button>
               <p className="text-center text-xs text-slate-500">Base rate from $350/hour · 5% platform fee · 95% goes directly to your pilot</p>
             </form>

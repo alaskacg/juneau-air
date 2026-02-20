@@ -13,6 +13,7 @@ const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Terms = lazy(() => import('./pages/Terms'));
+const BookingForm = lazy(() => import('./components/BookingForm'));
 const PilotRegister = lazy(() => import('./pages/pilot/Register'));
 const PilotDashboard = lazy(() => import('./pages/pilot/Dashboard'));
 const CustomerDashboard = lazy(() => import('./pages/customer/Dashboard'));
@@ -43,7 +44,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<FAQ />} />
-            <Route path="/book" element={<Home />} />
+            <Route path="/book" element={<BookingForm />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/pilot/register" element={<PilotRegister />} />
             <Route path="/pilot/dashboard/*" element={<PilotDashboard />} />

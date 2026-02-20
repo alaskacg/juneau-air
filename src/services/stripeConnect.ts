@@ -5,7 +5,11 @@ let stripePromise: Promise<Stripe | null>;
 
 export const getStripe = () => {
   if (!stripePromise) {
-    stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+    const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    if (!stripeKey) {
+      throw new Error('Missing VITE_STRIPE_PUBLISHABLE_KEY');
+    }
+    stripePromise = loadStripe(stripeKey);
   }
   return stripePromise;
 };

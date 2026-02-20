@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueries } from '@tanstack/react-query';
 import { getWeather, checkRouteWeather } from '@/services/weatherAPI';
 import type { WeatherData } from '@/services/weatherAPI';
 import Header from '@/components/Header';
@@ -107,15 +107,19 @@ export default function Weather() {
   const [departure, setDeparture] = useState('');
   const [arrival, setArrival] = useState('');
 
-  const weatherQueries = AIRPORTS.map((airport) => ({
-    airport,
-    ...useQuery({
+  const weatherResults = useQueries({
+    queries: AIRPORTS.map((airport) => ({
       queryKey: ['weather', airport.icao],
       queryFn: () => getWeather(airport.icao),
       refetchInterval: 5 * 60 * 1000,
       retry: 1,
       staleTime: 4 * 60 * 1000,
-    }),
+    })),
+  });
+
+  const weatherQueries = AIRPORTS.map((airport, index) => ({
+    airport,
+    ...weatherResults[index],
   }));
 
   const routeWeather = useQuery({
